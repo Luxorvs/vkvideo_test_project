@@ -8,7 +8,7 @@
 ----
 <!-- Технологии -->
 
-## Используемые технологии
+## Проект реализован с использованием:
 <p  align="center">
     <code><img width="6%" title="Selene" src="images/selene.png"></code>
     <code><img width="5%" title="Pytest" src="images/pytest.png"></code>
@@ -18,7 +18,6 @@
     <code><img width="5%" title="Allure Report" src="images/allure_report.png"></code>
     <code><img width="4.5%" title="Selenium" src="images/selenium.png"></code>
     <code><img width="5%" title="Allure TestOps" src="images/allure_testops.png"></code>
-    <code><img width="5%" title="Android Studio" src="images/android_studio.png"></code>
     <code><img width="5%" title="Jira" src="images/jira.png"></code>
     <code><img width="5%" title="Telegram" src="images/tg.png"></code>
     <code><img width="5%" title="Appium" src="images/appium.svg"></code>
