@@ -1,4 +1,4 @@
-<h1> Проект Web/Mobile + API тестирования видеоплатформы и стримингово сервиса VK Видео </h1>
+<h1> Проект Web и API тестирования видеоплатформы и стримингово сервиса VK Видео </h1>
 
 ----
 > <code><img width="1%" title="VK Видео" src="images/vk_logo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
