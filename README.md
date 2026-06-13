@@ -13,15 +13,15 @@
     <code><img width="5%" title="Python" src="images/python.png"></code>
     <code><img width="6%" title="Selene" src="images/selene.png"></code>
     <code><img width="5%" title="Pytest" src="images/pytest.png"></code>
-    <code><img width="5%" title="Jenkins" src="images/jenkins.png"></code>
-    <code><img width="5%" title="Selenium" src="images/selenium.svg"></code>
-    <code><img width="5%" title="Allure Report" src="images/allure_report.png"></code>
     <code><img width="5%" title="Browserstack" src="images/browserstack.png"></code>
+    <code><img width="5%" title="Jenkins" src="images/jenkins.png"></code>
+    <code><img width="5%" title="Allure Report" src="images/allure_report.png"></code>
+    <code><img width="4.5%" title="Selenium" src="images/selenium.png"></code>
     <code><img width="5%" title="Allure TestOps" src="images/allure_testops.png"></code>
     <code><img width="5%" title="Android Studio" src="images/android_studio.png"></code>
     <code><img width="5%" title="Jira" src="images/jira.png"></code>
     <code><img width="5%" title="Telegram" src="images/tg.png"></code>
-    <code><img width="5%" title="Appium" src="images/appium.svg"></code>
+    <code><img width="7.5%" title="Appium" src="images/appium.png"></code>
     <code><img width="4%" title="Requests" src="images/requests.png"></code>
     <code><img width="5%" title="Github" src="images/Github.png"></code>
 
