@@ -75,10 +75,10 @@ UI (11):
 Request Method:   POST 
 Status Code:      200 OK
 ```
-#### <img width="70%" title="DevTools" src="images/post.png">
+#### <img width="70%" title="DevTools" src="images/api_post.png">
 
 #### Переключаемся в `Network` → `Payload`
-#### <img width="100%" title="DevTools" src="images/key.png">
+#### <img width="100%" title="DevTools" src="images/api_key.png">
 
 #### Копируем 
 ```bash
@@ -112,9 +112,9 @@ ACCESS_TOKEN = "Ваш TOKEN"
 # <img width="3%" title="Allure Report" src="images/allure_report.png"> Allure report
 
 ##### Результаты выполнения тестова можно посмотреть в Allure-отчете
-![This is an image](images/allure-reports.png)
-![This is an image](images/allure-int.png)
-![This is an image](images/allure-graph.png)
+![This is an image](images/allure_reports.png)
+![This is an image](images/allure_int.png)
+![This is an image](images/allure_graph.png)
 
 ----
 <!-- Jenkins -->
