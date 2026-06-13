@@ -3,7 +3,7 @@
 ----
 > <code><img width="1%" title="VK Видео" src="images/vklogo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
 
-![This is an image](images/vkvideo.PNG)
+![This is an image](images/vkvideo.png)
 
 ----
 <!-- Технологии -->
