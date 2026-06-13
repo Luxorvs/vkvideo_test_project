@@ -21,7 +21,7 @@
     <code><img width="5%" title="Android Studio" src="images/android_studio.png"></code>
     <code><img width="5%" title="Jira" src="images/jira.png"></code>
     <code><img width="5%" title="Telegram" src="images/tg.png"></code>
-    <code><img width="7.5%" title="Appium" src="images/appium.png"></code>
+    <code><img width="5%" title="Appium" src="images/appium.svg"></code>
     <code><img width="4%" title="Requests" src="images/requests.png"></code>
     <code><img width="5%" title="Github" src="images/Github.png"></code>
 
