@@ -10,9 +10,9 @@
 
 ## Используемые технологии
 <p  align="center">
-    <code><img width="5%" title="Python" src="images/python.png"></code>
     <code><img width="6%" title="Selene" src="images/selene.png"></code>
     <code><img width="5%" title="Pytest" src="images/pytest.png"></code>
+    <code><img width="5%" title="Python" src="images/python.png"></code>
     <code><img width="5%" title="Browserstack" src="images/browserstack.png"></code>
     <code><img width="5%" title="Jenkins" src="images/jenkins.png"></code>
     <code><img width="5%" title="Allure Report" src="images/allure_report.png"></code>
@@ -22,9 +22,8 @@
     <code><img width="5%" title="Jira" src="images/jira.png"></code>
     <code><img width="5%" title="Telegram" src="images/tg.png"></code>
     <code><img width="5%" title="Appium" src="images/appium.svg"></code>
-    <code><img width="4%" title="Requests" src="images/requests.png"></code>
     <code><img width="5%" title="Github" src="images/Github.png"></code>
-
+    <code><img width="4%" title="Requests" src="images/requests.png"></code>
 </p>
 
 ----
@@ -68,19 +67,19 @@ UI (11):
 ## Локальный запуск автотестов
 #### Для запуска API тестов необходима предварительная настройка 
 > [!NOTE]
-> Открыть запрос выполнив клик по любой активной кнопке на Web интерфейсе `VK Видео` в режиме `DevTools (F12) → Network → Headers`
+> Открыть запрос выполнив переход по любой активной кнопке на Web интерфейсе `VK Видео` в режиме `DevTools (F12) → Network → Headers`
 
 ####  `Headers` должен содержать:
 ```bash
 Request Method:   POST 
 Status Code:      200 OK
 ```
-#### <img width="70%" title="DevTools" src="images/api_post.png">
+#### <img width="100%" title="DevTools" src="images/api_post.png">
 
 #### Переключаемся в `Network` → `Payload`
 #### <img width="100%" title="DevTools" src="images/api_key.png">
 
-#### Копируем 
+#### Копируем ваши данные
 ```bash
 V = "5.280"
 CLIENT_ID = "Ваш ID"
@@ -113,8 +112,8 @@ ACCESS_TOKEN = "Ваш TOKEN"
 
 ##### Результаты выполнения тестова можно посмотреть в Allure-отчете
 ![This is an image](images/allure_rep.png)
-![This is an image](images/allure_int.png)
 ![This is an image](images/allure_gra.png)
+![This is an image](images/allure_int.png)
 
 ----
 <!-- Jenkins -->
