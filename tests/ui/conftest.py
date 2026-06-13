@@ -39,24 +39,19 @@ def browser(request):
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--lang=ru-RU")
 
-    # Отключаем неявные ожидания - будем использовать явные через WebDriverWait
-    # driver.implicitly_wait(10) - УБИРАЕМ
-
     if env == "selenoid":
-        # Настройки для Selenoid
-        capabilities = {
-            "browserName": "chrome",
-            "browserVersion": "120.0",
-            "selenoid:options": {
-                "enableVNC": True,
-                "enableVideo": True,
-                "name": request.node.name
-            }
-        }
+        # Настройки для Selenoid (Selenium 4 синтаксис)
+        chrome_options.set_capability("browserName", "chrome")
+        chrome_options.set_capability("browserVersion", "120.0")
+        chrome_options.set_capability("selenoid:options", {
+            "enableVNC": True,
+            "enableVideo": True,
+            "name": request.node.name
+        })
+
         driver = webdriver.Remote(
             command_executor=selenoid_url,
-            options=chrome_options,
-            desired_capabilities=capabilities
+            options=chrome_options
         )
     else:
         # Локальный запуск
