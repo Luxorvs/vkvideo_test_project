@@ -1,9 +1,9 @@
 <h1> Проект Web/Mobile + API тестирования видеоплатформы и стримингово сервиса VK Видео </h1>
 
 ----
-> <code><img width="1%" title="VK Видео" src="images/vklogo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
+> <code><img width="1%" title="VK Видео" src="images/vk_logo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
 
-![This is an image](images/vkvideo.png)
+![This is an image](images/vk_video.png)
 
 ----
 <!-- Технологии -->
@@ -112,9 +112,9 @@ ACCESS_TOKEN = "Ваш TOKEN"
 # <img width="3%" title="Allure Report" src="images/allure_report.png"> Allure report
 
 ##### Результаты выполнения тестова можно посмотреть в Allure-отчете
-![This is an image](images/allure_reports.png)
+![This is an image](images/allure_rep.png)
 ![This is an image](images/allure_int.png)
-![This is an image](images/allure_graph.png)
+![This is an image](images/allure_gra.png)
 
 ----
 <!-- Jenkins -->
