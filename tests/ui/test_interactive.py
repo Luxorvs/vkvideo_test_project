@@ -1,6 +1,5 @@
 import pytest
 import allure
-import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,94 +26,54 @@ class TestInteractive:
                 EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"))
             )
             print("   ✅ Главная страница загружена")
-            time.sleep(2)
 
-        # Шаг 2: Разворачивание меню
+        # Шаг 2: Разворачивание меню (клик по "Развернуть" или "More")
         with allure.step("Разворачивание меню"):
-            print("   ⏳ Поиск кнопки 'Развернуть'...")
-            section_selector = "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"
-            sections = browser.find_elements(By.CSS_SELECTOR, section_selector)
+            print("   ⏳ Разворачивание меню...")
+            expand_button = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//h4[contains(text(), 'Развернуть') or contains(text(), 'More')]"))
+            )
+            expand_button.click()
+            print("   ✅ Меню развернуто")
 
-            # Ищем кнопку "Развернуть" или "More" (для английской версии)
-            expand_keywords = ["Развернуть", "More", "Expand"]
-            expand_elements = [s for s in sections if any(kw in s.text for kw in expand_keywords)]
-
-            if expand_elements:
-                expand_elements[0].click()
-                print("   ✅ Меню развернуто")
-                time.sleep(3)
-            else:
-                print("   ⚠️ Кнопка 'Развернуть' не найдена, возможно меню уже развернуто")
-
-        # Шаг 3: Переход в раздел Интерактив (поддержка русского и английского)
+        # Шаг 3: Переход в раздел Интерактив
         with allure.step("Переход в раздел Интерактив"):
             print("   ⏳ Поиск раздела 'Интерактив'...")
-            time.sleep(2)
+            section_selector = "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"
 
-            sections = browser.find_elements(By.CSS_SELECTOR, section_selector)
-            print(f"   📋 Найдено секций: {len(sections)}")
+            sections = WebDriverWait(browser, 10).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector))
+            )
 
-            for s in sections:
-                print(f"      - {s.text}")
-
-            # Поиск по русскому или английскому названию
-            interactive_keywords = ["Интерактив", "Interactive"]
-            interactive_elements = [s for s in sections if any(kw in s.text for kw in interactive_keywords)]
-
-            if not interactive_elements:
-                print("   ❌ Раздел 'Интерактив' не найден!")
-                raise AssertionError("Раздел 'Интерактив' не найден на странице")
-
-            interactive_section = interactive_elements[0]
+            interactive_section = [s for s in sections if s.text == "Interactive" or s.text == "Интерактив"][0]
             interactive_section.click()
-            print("   ✅ Клик по разделу 'Интерактив'")
+            print("   ✅ Клик по разделу")
 
-            # Ожидание загрузки страницы раздела
-            print("   ⏳ Ожидание загрузки страницы раздела...")
             WebDriverWait(browser, 15).until(EC.url_contains("interactives"))
-            time.sleep(3)
             print_info("URL раздела", browser.current_url)
 
         # Шаг 4: Переход в подраздел От сообществ
         with allure.step("Переход в подраздел От сообществ"):
             print("   ⏳ Поиск вкладки 'От сообществ'...")
-            WebDriverWait(browser, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "a.vkuiTabsItem__host"))
+
+            # Используем data-testid (работает и на Selenoid, и локально)
+            community_tab = WebDriverWait(browser, 15).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid='tab-/interactives/communities']"))
             )
+            community_tab.click()
+            print("   ✅ Клик по вкладке")
 
-            # Поиск по русскому или английскому названию
-            tabs = browser.find_elements(By.CSS_SELECTOR, "a.vkuiTabsItem__host, span.vkuiTabsItem__label")
-            community_tab = None
-            for tab in tabs:
-                tab_text = tab.text
-                if "От сообществ" in tab_text or "Communities" in tab_text:
-                    community_tab = tab
-                    break
-
-            if community_tab:
-                community_tab.click()
-            else:
-                # Fallback по data-testid
-                community_tab = WebDriverWait(browser, 15).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid='tab-/interactives/communities']"))
-                )
-                community_tab.click()
-
-            print("   ✅ Клик по вкладке 'От сообществ'")
-
-            # Ожидание загрузки страницы подраздела
-            print("   ⏳ Ожидание загрузки страницы подраздела...")
             WebDriverWait(browser, 15).until(EC.url_contains("communities"))
-            time.sleep(3)
             print_info("URL подраздела", browser.current_url)
 
         # Шаг 5: Сбор разделов
         with allure.step("Сбор разделов"):
-            print("   ⏳ Скролл страницы...")
             browser.execute_script("window.scrollBy(0, 300);")
-            time.sleep(3)
+            WebDriverWait(browser, 3).until(
+                lambda d: d.execute_script("return document.readyState") == "complete"
+            )
 
-            print("   ⏳ Поиск видео карточек...")
             titles = WebDriverWait(browser, 15).until(
                 EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[data-testid='video_card_title']"))
             )

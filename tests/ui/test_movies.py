@@ -20,94 +20,107 @@ class TestMovies:
         """Тест: переход в Фильмы и сериалы → Фантастика."""
         print_header("Фильмы и сериалы → Фантастика")
 
-        # Шаг 1: Поиск раздела Фильмы и сериалы (с поддержкой английского)
-        with allure.step("Поиск раздела 'Фильмы и сериалы'"):
+        # Шаг 1: Разворачивание меню
+        with allure.step("Разворачивание меню"):
+            print("   ⏳ Разворачивание меню...")
+            expand_button = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//h4[contains(text(), 'Развернуть') or contains(text(), 'More')]"))
+            )
+            expand_button.click()
+            print("   ✅ Меню развернуто")
+
+        # Шаг 2: Переход в раздел Фильмы и сериалы
+        with allure.step("Переход в раздел 'Фильмы и сериалы'"):
+            print("   ⏳ Поиск раздела 'Фильмы и сериалы'...")
             section_selector = "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"
 
-            # Ждем загрузки секций
-            sections = WebDriverWait(browser, 15).until(
+            sections = WebDriverWait(browser, 10).until(
                 EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector))
             )
 
-            # Ищем раздел по русскому или английскому названию
-            section_keywords = ["Фильмы и сериалы", "Movies", "Movies and series", "TV series"]
-            movies_section = None
-
-            for s in sections:
-                for kw in section_keywords:
-                    if kw in s.text:
-                        movies_section = s
-                        break
-                if movies_section:
-                    break
-
-            if not movies_section:
-                raise AssertionError("Раздел 'Фильмы и сериалы' не найден")
-
-            print(f"   ✅ Найден раздел: {movies_section.text}")
+            movies_section = [s for s in sections if s.text == "Movies" or s.text == "Фильмы и сериалы"][0]
             movies_section.click()
+            print("   ✅ Клик по разделу")
 
-            WebDriverWait(browser, 15).until(
-                EC.url_contains("movies_serials")
-            )
+            WebDriverWait(browser, 15).until(EC.url_contains("movies_serials"))
             print_info("URL после перехода", browser.current_url)
-            time.sleep(2)
 
-        # Шаг 2: Ожидание загрузки категорий
-        with allure.step("Ожидание загрузки категорий"):
-            WebDriverWait(browser, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "div.vkitImageBaseOverlayItem__root--XaHNe"))
-            )
-            print("   ✅ Категории загружены")
-            time.sleep(2)
+        # Шаг 3: Отладка - что есть на странице
+        with allure.step("Отладка: анализ страницы"):
+            print("   ⏳ Анализ страницы категорий...")
+            time.sleep(5)  # Даем странице время на загрузку
 
-        # Шаг 3: Поиск категории Фантастика
-        with allure.step("Поиск категории 'Фантастика'"):
-            category_selector = "div.vkitImageBaseOverlayItem__root--XaHNe .vkitTextClamp__root--ewZ0L"
-            categories = WebDriverWait(browser, 15).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, category_selector))
-            )
+            # Проверяем заголовок страницы
+            print(f"   📍 Заголовок страницы: {browser.title}")
 
-            # Ищем категорию по русскому или английскому названию
-            category_keywords = ["Фантастика", "Fantastic", "Sci-fi", "Science fiction"]
+            # Ищем все возможные категории
+            all_divs = browser.find_elements(By.CSS_SELECTOR, "div.vkitImageBaseOverlayItem__root--XaHNe")
+            print(f"   📋 Найдено div.vkitImageBaseOverlayItem: {len(all_divs)}")
+
+            # Ищем текст внутри категорий
+            category_texts = browser.find_elements(By.CSS_SELECTOR,
+                                                   "div.vkitImageBaseOverlayItem__root--XaHNe .vkitTextClamp__root--ewZ0L")
+            print(f"   📋 Найдено элементов с текстом категорий: {len(category_texts)}")
+            for cat in category_texts[:15]:
+                print(f"      - '{cat.text}'")
+
+            # Ищем возможные кнопки/ссылки
+            all_links = browser.find_elements(By.TAG_NAME, "a")
+            print(f"   📋 Всего ссылок: {len(all_links)}")
+
+            # Проверяем URL
+            print(f"   📍 Текущий URL: {browser.current_url}")
+
+        # Шаг 4: Переход в категорию Фантастика
+        with allure.step("Переход в категорию 'Фантастика'"):
+            print("   ⏳ Поиск категории 'Фантастика'...")
+
+            # Пробуем разные селекторы
+            category_selectors = [
+                "div.vkitImageBaseOverlayItem__root--XaHNe",
+                "a[href*='fantastic']",
+                "div[class*='Category']",
+                "div[class*='OverlayItem']"
+            ]
+
+            for selector in category_selectors:
+                elements = browser.find_elements(By.CSS_SELECTOR, selector)
+                print(f"   🔍 Селектор '{selector}': найдено {len(elements)} элементов")
+
+            # Ищем категорию по тексту
+            category_elements = browser.find_elements(By.CSS_SELECTOR,
+                                                      "div.vkitImageBaseOverlayItem__root--XaHNe .vkitTextClamp__root--ewZ0L")
+
+            for cat in category_elements:
+                print(f"      - '{cat.text}'")
+
+            # Ищем "Fantastic" или "Фантастика"
             fantastic_category = None
-
-            for c in categories:
-                for kw in category_keywords:
-                    if kw in c.text:
-                        fantastic_category = c
-                        break
-                if fantastic_category:
+            for cat in category_elements:
+                if cat.text == "Fantastic" or cat.text == "Фантастика":
+                    fantastic_category = cat
                     break
 
-            if not fantastic_category:
-                print("   ⚠️ Категория 'Фантастика' не найдена, пробуем первую...")
-                fantastic_category = categories[0]
+            if fantastic_category:
+                print(f"   ✅ Найдена категория: {fantastic_category.text}")
+                parent_div = fantastic_category.find_element(By.XPATH, "../../..")
+                parent_div.click()
+                print("   ✅ Клик по категории")
+            else:
+                print("   ❌ Категория 'Fantastic/Фантастика' не найдена")
+                raise AssertionError("Категория не найдена")
 
-            print(f"   ✅ Найдена категория: {fantastic_category.text}")
-
-            # Кликаем по родительскому элементу
-            parent_div = fantastic_category.find_element(By.XPATH, "../../..")
-            parent_div.click()
-
-            WebDriverWait(browser, 15).until(
-                EC.url_contains("fantastic")
-            )
+            WebDriverWait(browser, 15).until(EC.url_contains("fantastic"))
             print_info("URL после перехода в категорию", browser.current_url)
-            time.sleep(2)
-
-        # Шаг 4: Проверка финального URL
-        with allure.step("Проверка финального URL"):
-            final_url = browser.current_url
-            assert "fantastic" in final_url or "fantastik" in final_url.lower()
-            print_info("Финальный URL", final_url)
 
         # Шаг 5: Получение первого видео
         with allure.step("Получение первого видео"):
+            print("   ⏳ Поиск видео...")
+
             WebDriverWait(browser, 15).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
             )
-            time.sleep(2)
 
             video_info = main_page.get_first_video_info()
             if video_info:
