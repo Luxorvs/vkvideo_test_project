@@ -17,7 +17,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--selenoid-url",
         action="store",
-        default=os.getenv("SELENOID_URL", "http://localhost:4444/wd/hub"),
+        default=os.getenv("SELENOID_URL", "http://user1:1234@selenoid.autotests.cloud/wd/hub"),
         help="Selenoid hub URL"
     )
 
@@ -39,14 +39,12 @@ def browser(request):
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--lang=ru-RU")
 
-    # Отключаем неявные ожидания - будем использовать явные через WebDriverWait
-    # driver.implicitly_wait(10) - УБИРАЕМ
 
     if env == "selenoid":
         # Настройки для Selenoid
         capabilities = {
             "browserName": "chrome",
-            "browserVersion": "120.0",
+            "browserVersion": "127.0",
             "selenoid:options": {
                 "enableVNC": True,
                 "enableVideo": True,
