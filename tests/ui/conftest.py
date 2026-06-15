@@ -8,6 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from pages.main_page import MainPage
 
 
+
 def pytest_addoption(parser):
     """Добавление опций командной строки для выбора окружения."""
     parser.addoption(
@@ -56,7 +57,7 @@ def browser(request):
         })
 
         driver = webdriver.Remote(
-            command_executor=selenoid_url,
+            command_executor="http://user1:1234@selenoid.autotests.cloud/wd/hub",
             options=chrome_options
         )
     else:
