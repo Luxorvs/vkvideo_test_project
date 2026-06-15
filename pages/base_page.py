@@ -17,11 +17,23 @@ class BasePage:
         self.url = url
         self.wait = WebDriverWait(browser, 10)
 
+    @allure.step("Ожидание загрузки страницы")
+    def wait_for_page_load(self, timeout: int = 30):
+        """Ожидание полной загрузки страницы."""
+        try:
+            WebDriverWait(self.browser, timeout).until(
+                lambda d: d.execute_script("return document.readyState") == "complete"
+            )
+            time.sleep(1)  # небольшая пауза для стабильности
+        except:
+            pass
+
     @allure.step("Открытие страницы")
     def open(self) -> None:
         """Открывает страницу по URL."""
         if self.url:
             self.browser.get(self.url)
+            self.wait_for_page_load()
         else:
             print("   ⚠️ URL не указан, страница не открыта")
 
@@ -45,10 +57,11 @@ class BasePage:
 
     @allure.step("Клик по элементу {locator}")
     def click(self, locator: Tuple[str, str]) -> bool:
-        """Клик по элементу."""
+        """Клик по элементу с ожиданием загрузки страницы."""
         element = self.find_element(locator)
         if element:
             element.click()
+            self.wait_for_page_load()  # Добавлено ожидание после клика
             return True
         return False
 
@@ -81,7 +94,7 @@ class BasePage:
     def open_main_page(self):
         """Открывает главную страницу и возвращает MainPage."""
         self.browser.get("https://vkvideo.ru/")
-        time.sleep(2)
+        self.wait_for_page_load()
         from pages.main_page import MainPage
         return MainPage(self.browser)
 

@@ -3,6 +3,8 @@ import allure
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class CustomVideoPlayer:
@@ -11,6 +13,15 @@ class CustomVideoPlayer:
     def __init__(self, browser):
         self.browser = browser
         self.actions = ActionChains(browser)
+
+    def wait_for_page_load(self):
+        """Ожидание загрузки страницы."""
+        try:
+            WebDriverWait(self.browser, 30).until(
+                lambda d: d.execute_script("return document.readyState") == "complete"
+            )
+        except:
+            pass
 
     def find_video_container(self):
         """Находит контейнер видео."""
@@ -87,4 +98,5 @@ class CustomVideoPlayer:
             print("   ✓ ПРОБЕЛ (запуск)")
             time.sleep(3)
 
+        self.wait_for_page_load()  # Добавлено ожидание
         return True

@@ -25,6 +25,7 @@ class MainPage(BasePage):
     def open(self):
         """Открывает главную страницу."""
         self.browser.get(self.url)
+        self.wait_for_page_load()
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, self.SECTION_SELECTOR))
         )
@@ -40,6 +41,8 @@ class MainPage(BasePage):
         search_input.send_keys(query)
         search_input.send_keys(Keys.RETURN)
 
+        self.wait_for_page_load()
+
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
         )
@@ -47,23 +50,61 @@ class MainPage(BasePage):
 
     @allure.step("Перейти в раздел {section_name}")
     def go_to_section(self, section_name: str):
-        """Переход в указанный раздел с автоматическим раскрытием меню."""
+        """Переход в указанный раздел с поддержкой русского и английского."""
+        # Сопоставление русских и английских названий
+        section_mapping = {
+            "Детям": ["Детям", "For kids", "Kids"],
+            "Политика": ["Политика", "Politics"],
+            "Музыка": ["Музыка", "Music"],
+            "Фильмы и сериалы": ["Фильмы и сериалы", "Movies", "TV series"],
+            "Интерактив": ["Интерактив", "Interactive"],
+        }
+
         # Разворачиваем меню если нужно
         try:
             expand = self.browser.find_element(By.XPATH, "//*[contains(text(), 'Развернуть')]")
             if expand.is_displayed():
                 expand.click()
                 print(f"   ✅ Меню развернуто")
-                time.sleep(1)
+                self.wait_for_page_load()
+                time.sleep(2)
         except:
-            pass
+            try:
+                expand = self.browser.find_element(By.XPATH, "//*[contains(text(), 'More')]")
+                if expand.is_displayed():
+                    expand.click()
+                    print(f"   ✅ Меню развернуто")
+                    self.wait_for_page_load()
+                    time.sleep(2)
+            except:
+                pass
 
         # Ищем раздел
+        time.sleep(1)
         sections = self.browser.find_elements(By.CSS_SELECTOR, self.SECTION_SELECTOR)
-        section_element = [s for s in sections if section_name in s.text][0]
+
+        print(f"   📋 Найдено секций: {len(sections)}")
+
+        # Получаем возможные названия для искомого раздела
+        search_names = section_mapping.get(section_name, [section_name])
+
+        # Ищем раздел
+        section_element = None
+        for s in sections:
+            for name in search_names:
+                if name in s.text:
+                    section_element = s
+                    break
+            if section_element:
+                break
+
+        if not section_element:
+            print(f"   ❌ Раздел '{section_name}' не найден!")
+            raise AssertionError(f"Раздел '{section_name}' не найден на странице")
+
         print(f"   ✅ Найден раздел: {section_element.text}")
 
-        # Пробуем кликнуть по ссылке или по элементу
+        # Кликаем
         try:
             link = section_element.find_element(By.XPATH, "./..")
             href = link.get_attribute('href')
@@ -74,10 +115,11 @@ class MainPage(BasePage):
         except:
             section_element.click()
 
-        # Ждем изменения URL
+        self.wait_for_page_load()
         WebDriverWait(self.browser, 10).until(
             lambda driver: driver.current_url != "https://vkvideo.ru/"
         )
+        time.sleep(2)
         return self
 
     @allure.step("Кликнуть на категорию {category_name}")
@@ -85,6 +127,7 @@ class MainPage(BasePage):
         """Клик по категории."""
         # Прокручиваем страницу
         self.browser.execute_script("window.scrollBy(0, 300);")
+        self.wait_for_page_load()
         time.sleep(1)
 
         # Ищем категорию
@@ -95,16 +138,19 @@ class MainPage(BasePage):
         # Находим кликабельный родитель
         parent_div = category_element.find_element(By.XPATH, "../../..")
         self.browser.execute_script("arguments[0].scrollIntoView(true);", parent_div)
+        self.wait_for_page_load()
         time.sleep(1)
 
         # Кликаем
         parent_div.click()
+        self.wait_for_page_load()
         print(f"   ✅ Клик по категории выполнен")
 
         # Ждем изменения URL
         WebDriverWait(self.browser, 10).until(
             EC.url_contains(category_name.lower())
         )
+        self.wait_for_page_load()
         return self
 
     @allure.step("Получение информации о первом видео")
@@ -112,6 +158,8 @@ class MainPage(BasePage):
         """
         Получает информацию о первом видео (URL и название).
         """
+        self.wait_for_page_load()
+
         # Ждем появления видео
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
