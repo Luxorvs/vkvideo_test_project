@@ -3,37 +3,17 @@ import allure
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from pages.main_page import MainPage
 
 
-
-def pytest_addoption(parser):
-    """Добавление опций командной строки для выбора окружения."""
-    parser.addoption(
-        "--env",
-        action="store",
-        default="local",
-        help="Environment to run tests: local or selenoid"
-    )
-    parser.addoption(
-        "--selenoid-url",
-        action="store",
-        default=os.getenv("SELENOID_URL", "https://user1:1234@selenoid.autotests.cloud/wd/hub"),
-        help="Selenoid hub URL"
-    )
-
-
 @pytest.fixture(scope="function")
-def browser(request):
+def browser():
     """
-    Фикстура браузера с поддержкой локального и удаленного запуска.
+    Фикстура браузера.
+    По умолчанию - локальный Chrome.
+    Для Selenoid: установить переменную USE_SELENOID=true
     """
-    env = request.config.getoption("--env")
-    selenoid_url = request.config.getoption("--selenoid-url")
-
-    print(f"\nstart browser for test.. (env: {env})")
+    print("\nstart browser for test..")
 
     chrome_options = Options()
     chrome_options.add_argument("--start-maximized")
@@ -42,18 +22,16 @@ def browser(request):
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--lang=ru-RU")
 
-    # Для CI/CD добавляем headless режим
-    if os.getenv("CI") == "true" or os.getenv("HEADLESS") == "true":
-        chrome_options.add_argument("--headless=new")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
+    # Проверяем нужно ли использовать Selenoid
+    use_selenoid = os.getenv("USE_SELENOID", "false").lower() == "true"
 
-    if env == "selenoid":
-        # Настройки для Selenoid
+    if use_selenoid:
+        print("Running on Selenoid")
         chrome_options.set_capability("browserName", "chrome")
         chrome_options.set_capability("browserVersion", "127.0")
         chrome_options.set_capability("selenoid:options", {
-            "enableVideo": False
+            "enableVNC": True,
+            "enableVideo": True,
         })
 
         driver = webdriver.Remote(
@@ -61,9 +39,8 @@ def browser(request):
             options=chrome_options
         )
     else:
-        # Локальный запуск с автоматической установкой ChromeDriver
-        service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=chrome_options)
+        print("Running locally")
+        driver = webdriver.Chrome(options=chrome_options)
 
     driver.set_page_load_timeout(30)
     driver.base_url = "https://vkvideo.ru"
@@ -72,7 +49,7 @@ def browser(request):
 
     allure.attach(
         driver.get_screenshot_as_png(),
-        name=f"screenshot_{request.node.name}",
+        name=f"screenshot",
         attachment_type=allure.attachment_type.PNG
     )
 
@@ -86,15 +63,3 @@ def main_page(browser):
     page = MainPage(browser)
     page.open()
     return page
-
-
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    """
-    Хук для сохранения результата теста.
-    """
-    outcome = yield
-    rep = outcome.get_result()
-
-    if rep.when == "call":
-        item.rep_call = rep

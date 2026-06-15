@@ -3,4 +3,5 @@
 tests/api/__pycache__/
 tests/ui/__pycache__/
 pages/__pycache__/
+allure-results/
 tests/__pycache__/
