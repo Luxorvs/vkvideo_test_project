@@ -53,8 +53,7 @@ def browser(request):
         }
         driver = webdriver.Remote(
             command_executor=selenoid_url,
-            options=chrome_options,
-            desired_capabilities=capabilities
+            options=chrome_options
         )
     else:
         # Локальный запуск
