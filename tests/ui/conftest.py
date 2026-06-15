@@ -6,20 +6,25 @@ from selenium.webdriver.chrome.options import Options
 from pages.main_page import MainPage
 
 
-def pytest_addoption(parser):
-    """Добавление опций командной строки для выбора окружения."""
-    parser.addoption(
-        "--env",
-        action="store",
-        default="local",
-        help="Environment to run tests: local or selenoid"
+
+@pytest.fixture(scope='function')
+def setup_browser(request):
+    options = Options()
+    selenoid_capabilities = {
+        "browserName": "chrome",
+        "browserVersion": "128.0",
+        "selenoid:options": {
+            "enableVideo": False
+        }
+    }
+    options.capabilities.update(selenoid_capabilities)
+    driver = webdriver.Remote(
+        command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
+        options = options
     )
-    parser.addoption(
-        "--selenoid-url",
-        action="store",
-        default=os.getenv("SELENOID_URL", "https://user1:1234@selenoid.autotests.cloud/wd/hub"),
-        help="Selenoid hub URL"
-    )
+
+    browser = Browser(Config(driver))
+    yield browser
 
 
 @pytest.fixture(scope="function")
