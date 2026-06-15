@@ -7,18 +7,18 @@ logger = logging.getLogger(__name__)
 
 @allure.epic("API Tests")
 @allure.feature("POST requests")
-@allure.story("Food Section")
-@allure.title('Get videos from "Food" section')
-@allure.tag("API", "POST", "food")
+@allure.story("Auto Section")
+@allure.title('Get videos from "Auto" section')
+@allure.tag("API", "POST", "auto")
 @allure.severity('critical')
 @allure.label("owner", "Dmitriy")
-def test_get_food_section_videos(api_request):
-    """Тест получения видео из раздела Еда"""
+def test_get_cars_section_videos(api_request):
+    """Тест получения видео из раздела Авто"""
 
     response = api_request(
         "/catalog.getSection",
         params={"v": API_VERSION, "client_id": CLIENT_ID},
-        data={"section_id": SECTION_IDS["Еда"], "access_token": ACCESS_TOKEN}
+        data={"section_id": SECTION_IDS["Авто"], "access_token": ACCESS_TOKEN}
     )
 
     assert response.status_code == 200
@@ -30,4 +30,4 @@ def test_get_food_section_videos(api_request):
 
     result_videos = [videos[int(vid.split('_')[1])] for vid in video_ids[:10]]
 
-    format_videos(result_videos, limit=10, section_name="Food - recommendations")
+    format_videos(result_videos, limit=10, section_name="Auto - recommendations")

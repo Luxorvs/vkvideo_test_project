@@ -39,6 +39,9 @@ def browser(request):
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--lang=ru-RU")
 
+    # Отключаем неявные ожидания - будем использовать явные через WebDriverWait
+    # driver.implicitly_wait(10) - УБИРАЕМ
+
     if env == "selenoid":
         # Настройки для Selenoid
         capabilities = {
@@ -64,25 +67,11 @@ def browser(request):
 
     yield driver
 
-    # Добавление скриншота в Allure при падении теста
-    if hasattr(request.node, 'rep_call') and request.node.rep_call.failed:
-        allure.attach(
-            driver.get_screenshot_as_png(),
-            name=f"screenshot_{request.node.name}_failed",
-            attachment_type=allure.attachment_type.PNG
-        )
-
-        # Добавляем логи браузера при падении
-        try:
-            logs = driver.get_log("browser")
-            if logs:
-                allure.attach(
-                    "\n".join([str(log) for log in logs]),
-                    name="browser_logs",
-                    attachment_type=allure.attachment_type.TEXT
-                )
-        except:
-            pass
+    allure.attach(
+        driver.get_screenshot_as_png(),
+        name=f"screenshot_{request.node.name}",
+        attachment_type=allure.attachment_type.PNG
+    )
 
     print("\nquit browser..")
     driver.quit()
