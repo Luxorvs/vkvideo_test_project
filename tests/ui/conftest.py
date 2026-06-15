@@ -3,6 +3,8 @@ import allure
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from pages.main_page import MainPage
 
 
@@ -39,23 +41,28 @@ def browser(request):
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--lang=ru-RU")
 
+    # Для CI/CD добавляем headless режим
+    if os.getenv("CI") == "true" or os.getenv("HEADLESS") == "true":
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
     if env == "selenoid":
-        # Настройки для Selenoid - ПРАВИЛЬНЫЙ СПОСОБ
+        # Настройки для Selenoid
         chrome_options.set_capability("browserName", "chrome")
         chrome_options.set_capability("browserVersion", "127.0")
         chrome_options.set_capability("selenoid:options", {
-            "enableVNC": True,
-            "enableVideo": True,
-            "name": request.node.name
+            "enableVideo": False
         })
 
         driver = webdriver.Remote(
             command_executor=selenoid_url,
-            options=chrome_options  # Только options, без capabilities
+            options=chrome_options
         )
     else:
-        # Локальный запуск
-        driver = webdriver.Chrome(options=chrome_options)
+        # Локальный запуск с автоматической установкой ChromeDriver
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
     driver.set_page_load_timeout(30)
     driver.base_url = "https://vkvideo.ru"
