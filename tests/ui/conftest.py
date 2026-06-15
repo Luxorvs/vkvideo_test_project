@@ -20,7 +20,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--selenoid-url",
         action="store",
-        default=os.getenv("SELENOID_URL", "http://user1:1234@selenoid.autotests.cloud/wd/hub"),
+        default=os.getenv("SELENOID_URL", "https://user1:1234@selenoid.autotests.cloud/wd/hub"),
         help="Selenoid hub URL"
     )
 
@@ -57,7 +57,7 @@ def browser(request):
         })
 
         driver = webdriver.Remote(
-            command_executor="http://user1:1234@selenoid.autotests.cloud/wd/hub",
+            command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
             options=chrome_options
         )
     else:
