@@ -17,7 +17,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--selenoid-url",
         action="store",
-        default=os.getenv("SELENOID_URL", "http://localhost:4444/wd/hub"),
+        default=os.getenv("SELENOID_URL", "https://user1:1234@selenoid.autotests.cloud/wd/hub"),
         help="Selenoid hub URL"
     )
 
