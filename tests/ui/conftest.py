@@ -6,25 +6,20 @@ from selenium.webdriver.chrome.options import Options
 from pages.main_page import MainPage
 
 
-
-@pytest.fixture(scope='function')
-def setup_browser(request):
-    options = Options()
-    selenoid_capabilities = {
-        "browserName": "chrome",
-        "browserVersion": "128.0",
-        "selenoid:options": {
-            "enableVideo": False
-        }
-    }
-    options.capabilities.update(selenoid_capabilities)
-    driver = webdriver.Remote(
-        command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
-        options = options
+def pytest_addoption(parser):
+    """Добавление опций командной строки для выбора окружения."""
+    parser.addoption(
+        "--env",
+        action="store",
+        default="local",
+        help="Environment to run tests: local or selenoid"
     )
-
-    browser = Browser(Config(driver))
-    yield browser
+    parser.addoption(
+        "--selenoid-url",
+        action="store",
+        default=os.getenv("SELENOID_URL", "http://localhost:4444/wd/hub"),
+        help="Selenoid hub URL"
+    )
 
 
 @pytest.fixture(scope="function")
@@ -33,32 +28,61 @@ def browser(request):
     Фикстура браузера с поддержкой локального и удаленного запуска.
     """
     env = request.config.getoption("--env")
+    selenoid_url = request.config.getoption("--selenoid-url")
+
+    print(f"\nstart browser for test.. (env: {env})")
+
+    chrome_options = Options()
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument("--lang=ru-RU")
 
     if env == "selenoid":
-        # Используем вашу существующую фикстуру setup_browser
-        from .conftest import setup_browser
-        driver = setup_browser(request)
+        # Настройки для Selenoid
+        capabilities = {
+            "browserName": "chrome",
+            "browserVersion": "120.0",
+            "selenoid:options": {
+                "enableVNC": True,
+                "enableVideo": True,
+                "name": request.node.name
+            }
+        }
+        driver = webdriver.Remote(
+            command_executor=selenoid_url,
+            options=chrome_options,
+            desired_capabilities=capabilities
+        )
     else:
         # Локальный запуск
-        options = Options()
-        options.add_argument("--start-maximized")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--window-size=1920,1080")
-        options.add_argument("--disable-notifications")
-        options.add_argument("--lang=ru-RU")
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(options=chrome_options)
 
     driver.set_page_load_timeout(30)
     driver.base_url = "https://vkvideo.ru"
 
     yield driver
 
+    # Добавление скриншота в Allure при падении теста
     if hasattr(request.node, 'rep_call') and request.node.rep_call.failed:
         allure.attach(
             driver.get_screenshot_as_png(),
             name=f"screenshot_{request.node.name}_failed",
             attachment_type=allure.attachment_type.PNG
         )
+
+        # Добавляем логи браузера при падении
+        try:
+            logs = driver.get_log("browser")
+            if logs:
+                allure.attach(
+                    "\n".join([str(log) for log in logs]),
+                    name="browser_logs",
+                    attachment_type=allure.attachment_type.TEXT
+                )
+        except:
+            pass
 
     print("\nquit browser..")
     driver.quit()
