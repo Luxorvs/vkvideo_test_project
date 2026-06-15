@@ -33,45 +33,32 @@ def browser(request):
     Фикстура браузера с поддержкой локального и удаленного запуска.
     """
     env = request.config.getoption("--env")
-    selenoid_url = request.config.getoption("--selenoid-url")
-
-    print(f"\nstart browser for test.. (env: {env})")
-
-    chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-notifications")
-    chrome_options.add_argument("--lang=ru-RU")
 
     if env == "selenoid":
-        # Настройки для Selenoid (Selenium 4 синтаксис)
-        chrome_options.set_capability("browserName", "chrome")
-        chrome_options.set_capability("browserVersion", "120.0")
-        chrome_options.set_capability("selenoid:options", {
-            "enableVNC": True,
-            "enableVideo": True,
-            "name": request.node.name
-        })
-
-        driver = webdriver.Remote(
-            command_executor=selenoid_url,
-            options=chrome_options
-        )
+        # Используем вашу существующую фикстуру setup_browser
+        from .conftest import setup_browser
+        driver = setup_browser(request)
     else:
         # Локальный запуск
-        driver = webdriver.Chrome(options=chrome_options)
+        options = Options()
+        options.add_argument("--start-maximized")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--disable-notifications")
+        options.add_argument("--lang=ru-RU")
+        driver = webdriver.Chrome(options=options)
 
     driver.set_page_load_timeout(30)
     driver.base_url = "https://vkvideo.ru"
 
     yield driver
 
-    allure.attach(
-        driver.get_screenshot_as_png(),
-        name=f"screenshot_{request.node.name}",
-        attachment_type=allure.attachment_type.PNG
-    )
+    if hasattr(request.node, 'rep_call') and request.node.rep_call.failed:
+        allure.attach(
+            driver.get_screenshot_as_png(),
+            name=f"screenshot_{request.node.name}_failed",
+            attachment_type=allure.attachment_type.PNG
+        )
 
     print("\nquit browser..")
     driver.quit()
