@@ -1,4 +1,4 @@
-<h1> Проект Web и API тестирования видеоплатформы и стримингово сервиса VK Видео </h1>
+<h1> Проект Web и API тестирование видеоплатформы и стримингово сервиса VK Видео </h1>
 
 ----
 > <code><img width="3%" title="VK Видео" src="images/vk_logo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
@@ -10,12 +10,12 @@
 
 ## Проект реализован с использованием:
 <p  align="center">
-    <code><img width="4%" title="Requests" src="images/requests.png"></code>
+    <code><img width="5%" title="Requests" src="images/requests.png"></code>
     <code><img width="5%" title="Github" src="images/Github.png"></code>
     <code><img width="5%" title="Selenoid" src="images/selenoid.png"></code>
     <code><img width="5%" title="Jira" src="images/jira.png"></code>
     <code><img width="5%" title="Python" src="images/python.png"></code>
-    <code><img width="5%" title="Pytest" src="images/pytest.png"></code>
+    <code><img width=5.5%" title="Pytest" src="images/pytest.png"></code>
     <code><img width="5%" title="Jenkins" src="images/jenkins.png"></code>
     <code><img width="5%" title="Allure Report" src="images/allure_report.png"></code>
     <code><img width="5%" title="Allure TestOps" src="images/allure_testops.png"></code>
