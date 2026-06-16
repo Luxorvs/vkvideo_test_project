@@ -114,5 +114,6 @@ def browser():
 @pytest.fixture
 def main_page(browser):
     """Фикстура главной страницы."""
+    from pages.main_page import MainPage
     page = MainPage(browser)
     return page

@@ -29,17 +29,10 @@ class TestTech:
         with allure.step("Поиск подборки Технологии"):
             print("   ⏳ Поиск вкладки 'Технологии'...")
 
-            # Используем XPATH с contains для надежного поиска
-            try:
-                tech_tab = WebDriverWait(browser, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Technology') or contains(text(), 'Технологии')]")))
-                tech_tab.click()
-                print("   ✅ Клик по вкладке 'Технологии'")
-            except:
-                print("   ⚠️ Вкладка 'Технологии' не найдена, пропускаем тест")
-                pytest.skip("Подборка 'Технологии' отсутствует в текущем окружении")
+            tech_tab = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Technology') or contains(text(), 'Технологии')]")))
+            tech_tab.click()
+            print("   ✅ Клик по вкладке 'Технологии'")
 
-            # Ждем загрузки страницы
             WebDriverWait(browser, 10).until(EC.url_contains("technology"))
             print_info("URL подборки", browser.current_url)
 

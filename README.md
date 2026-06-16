@@ -1,7 +1,7 @@
 <h1> Проект Web и API тестирования видеоплатформы и стримингово сервиса VK Видео </h1>
 
 ----
-> <code><img width="1%" title="VK Видео" src="images/vk_logo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
+> <code><img width="3%" title="VK Видео" src="images/vk_logo.png"></code> <a target="_blank" href="https://vkvideo.ru/">VK Видео</a>
 
 ![This is an image](images/vk_video.png)
 
@@ -10,19 +10,17 @@
 
 ## Проект реализован с использованием:
 <p  align="center">
-    <code><img width="6%" title="Selene" src="images/selene.png"></code>
-    <code><img width="5%" title="Pytest" src="images/pytest.png"></code>
+    <code><img width="4%" title="Requests" src="images/requests.png"></code>
+    <code><img width="5%" title="Github" src="images/Github.png"></code>
+    <code><img width="5%" title="Selenoid" src="images/selenoid.png"></code>
+    <code><img width="5%" title="Jira" src="images/jira.png"></code>
     <code><img width="5%" title="Python" src="images/python.png"></code>
-    <code><img width="5%" title="Browserstack" src="images/browserstack.png"></code>
+    <code><img width="5%" title="Pytest" src="images/pytest.png"></code>
     <code><img width="5%" title="Jenkins" src="images/jenkins.png"></code>
     <code><img width="5%" title="Allure Report" src="images/allure_report.png"></code>
-    <code><img width="4.5%" title="Selenium" src="images/selenium.png"></code>
     <code><img width="5%" title="Allure TestOps" src="images/allure_testops.png"></code>
-    <code><img width="5%" title="Jira" src="images/jira.png"></code>
-    <code><img width="5%" title="Telegram" src="images/tg.png"></code>
-    <code><img width="5%" title="Appium" src="images/appium.svg"></code>
-    <code><img width="5%" title="Github" src="images/Github.png"></code>
-    <code><img width="4%" title="Requests" src="images/requests.png"></code>
+    <code><img width="5%" title="PyCharm" src="images/pycharm.png"></code>
+    <code><img width="4.5%" title="Selenium" src="images/selenium.png"></code>
 </p>
 
 ----
@@ -64,9 +62,11 @@ UI (11):
 
 ----
 ## Локальный запуск автотестов
-#### Для запуска API тестов необходима предварительная настройка 
 > [!NOTE]
-> Открыть запрос выполнив переход по любой активной кнопке на Web интерфейсе `VK Видео` в режиме `DevTools (F12) → Network → Headers`
+> Для запуска API тестов необходима предварительная настройка 
+
+
+#### Открыть запрос выполнив переход по любой активной кнопке на Web интерфейсе `VK Видео` в режиме `DevTools (F12) → Network → Headers`
 
 ####  `Headers` должен содержать:
 ```bash
@@ -80,7 +80,7 @@ Status Code:      200 OK
 
 #### Копируем ваши данные
 ```bash
-V = "5.280"
+V = "5.280" #Версия не критична, главное ее наличие
 CLIENT_ID = "Ваш ID"
 ACCESS_TOKEN = "Ваш TOKEN"
 ```
@@ -91,7 +91,16 @@ ACCESS_TOKEN = "Ваш TOKEN"
 ### Рекомендуемые параметры запуска
 
 ```bash
->  pytest .\tests\ --alluredir=allure-results -v -s   
+>  pytest .\tests\ --alluredir=allure-results -v -s  
+```
+
+#### Для запуска с использованием `selenoid` изменить параметр запуска `USE_SELENOID` на `True`. По умолчанию стоит режим `False`.
+> [!NOTE]
+> Нет необходимости менять код!
+
+#### Указывам перед запуском тестов из терминала
+```bash
+>  $env:USE_SELENOID="True"; pytest .\tests\ --alluredir=allure-results -v -s
 ```
 ### Построение Allure-отчета
 
