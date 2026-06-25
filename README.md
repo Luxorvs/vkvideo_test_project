@@ -116,6 +116,10 @@ ACCESS_TOKEN = "Ваш TOKEN"
 <!-- Allure report -->
 # <img width="3%" title="Allure Report" src="images/allure_report.png"> Allure report
 
+### [Задача в jenkins](https://jenkins.autotests.cloud/job/vkvideo_test_project/)
+![This is an image](images/allure_rep.png)
+
+
 ##### Результаты выполнения тестова можно посмотреть в Allure-отчете
 ![This is an image](images/allure_rep.png)
 ![This is an image](images/allure_gra.png)

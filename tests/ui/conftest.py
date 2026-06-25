@@ -39,7 +39,7 @@ def browser():
     if use_selenoid:
         print("Running on Selenoid")
         chrome_options.set_capability("browserName", "chrome")
-        chrome_options.set_capability("browserVersion", "128.0")
+        chrome_options.set_capability("browserVersion", "127.0")
         chrome_options.set_capability("selenoid:options", {
             "enableVNC": True,
             "enableVideo": False,
