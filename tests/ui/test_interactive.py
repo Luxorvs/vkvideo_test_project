@@ -22,18 +22,13 @@ class TestInteractive:
         # Шаг 1: Ожидание загрузки главной страницы
         with allure.step("Ожидание загрузки главной страницы"):
             print("   ⏳ Ожидание загрузки главной страницы...")
-            WebDriverWait(browser, 30).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"))
-            )
+            WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG")))
             print("   ✅ Главная страница загружена")
 
         # Шаг 2: Разворачивание меню (клик по "Развернуть" или "More")
         with allure.step("Разворачивание меню"):
             print("   ⏳ Разворачивание меню...")
-            expand_button = WebDriverWait(browser, 10).until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, "//h4[contains(text(), 'Развернуть') or contains(text(), 'More')]"))
-            )
+            expand_button = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//h4[contains(text(), 'Развернуть') or contains(text(), 'More')]")))
             expand_button.click()
             print("   ✅ Меню развернуто")
 
@@ -42,9 +37,7 @@ class TestInteractive:
             print("   ⏳ Поиск раздела 'Интерактив'...")
             section_selector = "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"
 
-            sections = WebDriverWait(browser, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector))
-            )
+            sections = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector)))
 
             interactive_section = [s for s in sections if s.text == "Interactive" or s.text == "Интерактив"][0]
             interactive_section.click()
@@ -58,9 +51,7 @@ class TestInteractive:
             print("   ⏳ Поиск вкладки 'От сообществ'...")
 
             # Используем data-testid (работает и на Selenoid, и локально)
-            community_tab = WebDriverWait(browser, 15).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid='tab-/interactives/communities']"))
-            )
+            community_tab = WebDriverWait(browser, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid='tab-/interactives/communities']")))
             community_tab.click()
             print("   ✅ Клик по вкладке")
 
@@ -70,13 +61,9 @@ class TestInteractive:
         # Шаг 5: Сбор разделов
         with allure.step("Сбор разделов"):
             browser.execute_script("window.scrollBy(0, 300);")
-            WebDriverWait(browser, 3).until(
-                lambda d: d.execute_script("return document.readyState") == "complete"
-            )
+            WebDriverWait(browser, 3).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
-            titles = WebDriverWait(browser, 15).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[data-testid='video_card_title']"))
-            )
+            titles = WebDriverWait(browser, 15).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[data-testid='video_card_title']")))
             print(f"   ✅ Найдено разделов: {len(titles)}")
 
             print_subheader("ПЕРВЫЕ 5 ИНТЕРАКТИВНЫХ РАЗДЕЛОВ")

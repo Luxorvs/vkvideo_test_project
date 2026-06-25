@@ -29,9 +29,7 @@ class TestSearch:
             with allure.step(f"Поиск по запросу '{query}'"):
                 browser.get(f"{browser.base_url}/?q={query}")
 
-                WebDriverWait(browser, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
-                )
+                WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']")))
 
                 current_url = browser.current_url
                 assert "?q=" in current_url

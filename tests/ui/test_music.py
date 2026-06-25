@@ -22,9 +22,7 @@ class TestMusic:
         # Шаг 1: Ожидание загрузки главной страницы
         with allure.step("Ожидание загрузки главной страницы"):
             print("   ⏳ Ожидание загрузки главной страницы...")
-            WebDriverWait(browser, 30).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"))
-            )
+            WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG")))
             print("   ✅ Главная страница загружена")
 
         # Шаг 2: Поиск и переход в раздел Музыка (без разворачивания меню)
@@ -32,9 +30,7 @@ class TestMusic:
             print("   ⏳ Поиск раздела 'Музыка'...")
             section_selector = "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"
 
-            sections = WebDriverWait(browser, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector))
-            )
+            sections = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector)))
 
             music_section = None
             for s in sections:
@@ -56,9 +52,7 @@ class TestMusic:
         with allure.step("Получение первого видео"):
             print("   ⏳ Поиск видео...")
 
-            WebDriverWait(browser, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
-            )
+            WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']")))
 
             video_info = main_page.get_first_video_info()
             if video_info:

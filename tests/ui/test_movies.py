@@ -22,9 +22,7 @@ class TestMovies:
         # Шаг 1: Ожидание загрузки главной страницы
         with allure.step("Ожидание загрузки главной страницы"):
             print("   ⏳ Ожидание загрузки главной страницы...")
-            WebDriverWait(browser, 30).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"))
-            )
+            WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG")))
             print("   ✅ Главная страница загружена")
 
         # Шаг 2: Поиск раздела Фильмы и сериалы
@@ -32,21 +30,15 @@ class TestMovies:
             print("   ⏳ Поиск раздела 'Фильмы и сериалы'...")
             section_selector = "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"
 
-            sections = WebDriverWait(browser, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector))
-            )
+            sections = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, section_selector)))
 
-            movies_section = [s for s in sections if s.text == "Movies" or s.text == "Фильмы и сериалы"][0]
+            movies_section = [s for s in sections if
+                              s.text == "Movies" or s.text == "Movies and TV series" or s.text == "Фильмы и сериалы"][0]
             movies_section.click()
             print("   ✅ Клик по разделу")
 
-            # Проверяем, изменился ли URL
-            try:
-                WebDriverWait(browser, 10).until(EC.url_contains("movies_serials"))
-                print_info("URL после перехода", browser.current_url)
-            except:
-                print("   ⚠️ URL не изменился, раздел 'Фильмы и сериалы' недоступен, пропускаем тест")
-                pytest.skip("Раздел 'Фильмы и сериалы' недоступен в текущем окружении")
+            WebDriverWait(browser, 15).until(EC.url_contains("movies_serials"))
+            print_info("URL после перехода", browser.current_url)
 
         # Шаг 3: Проверка наличия категорий
         with allure.step("Проверка загрузки категорий"):
@@ -54,25 +46,27 @@ class TestMovies:
             browser.execute_script("window.scrollBy(0, 300);")
 
             category_selector = "div.vkitImageBaseOverlayItem__root--XaHNe"
-            try:
-                WebDriverWait(browser, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, category_selector))
-                )
-                print("   ✅ Категории загружены")
-            except:
-                print("   ⚠️ Категории не загрузились, пропускаем тест")
-                pytest.skip("Категории не загрузились на странице /movies_serials")
+            WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, category_selector)))
+            print("   ✅ Категории загружены")
 
-        # Шаг 4: Поиск категории Фантастика
+        # Шаг 4: Поиск категории Фантастика (поддержка русского и английского)
         with allure.step("Поиск категории 'Фантастика'"):
             print("   ⏳ Поиск категории 'Фантастика'...")
 
             category_text_selector = "div.vkitImageBaseOverlayItem__root--XaHNe .vkitTextClamp__root--ewZ0L"
-            category_elements = WebDriverWait(browser, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, category_text_selector))
-            )
+            category_elements = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, category_text_selector)))
 
-            fantastic_category = [c for c in category_elements if c.text == "Fantastic" or c.text == "Фантастика"][0]
+            # Поиск категории по русскому или английскому названию
+            fantastic_category = None
+            for c in category_elements:
+                if c.text == "Science fiction" or c.text == "Фантастика":
+                    fantastic_category = c
+                    break
+
+            if not fantastic_category:
+                print("   ⚠️ Категория 'Фантастика' не найдена, пропускаем тест")
+                pytest.skip("Категория 'Фантастика' не найдена в текущем окружении")
+
             parent_div = fantastic_category.find_element(By.XPATH, "../../..")
             parent_div.click()
             print("   ✅ Клик по категории")
@@ -84,9 +78,7 @@ class TestMovies:
         with allure.step("Получение первого видео"):
             print("   ⏳ Поиск видео...")
 
-            WebDriverWait(browser, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
-            )
+            WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']")))
 
             video_info = main_page.get_first_video_info()
             print_info("Название", video_info['title'])

@@ -41,14 +41,16 @@ def browser():
     if use_selenoid:
         print("Running on Selenoid")
         chrome_options.set_capability("browserName", "chrome")
-        chrome_options.set_capability("browserVersion", "127.0")
+        chrome_options.set_capability("browserVersion", "128.0")
         chrome_options.set_capability("selenoid:options", {
             "enableVNC": True,
-            "enableVideo": True,
+            "enableVideo": False,
         })
 
         driver = webdriver.Remote(
-            command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
+            #command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
+            #command_executor="http://selenoid:4444/wd/hub",
+            command_executor="http://ru.selenoid.autotests.cloud/wd/hub",
             options=chrome_options
         )
 
@@ -57,23 +59,17 @@ def browser():
         print("Открываем vkvideo.ru...")
         driver.get("https://vkvideo.ru/")
 
-        WebDriverWait(driver, 30).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
+        WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
         try:
-            continue_button = WebDriverWait(driver, 5).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Продолжить')]"))
-            )
+            continue_button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Продолжить')]")))
             print("Обнаружена капча, нажимаем 'Продолжить'...")
             continue_button.click()
             print("✅ Капча пройдена!")
         except:
             pass
 
-        WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG"))
-        )
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "h4.vkitgetColorClass__colorTextPrimary--Pm0qG")))
         print("✅ Основной контент загружен!")
 
     else:
@@ -88,9 +84,7 @@ def browser():
         # Для локального запуска тоже открываем страницу
         print("Открываем vkvideo.ru...")
         driver.get("https://vkvideo.ru/")
-        WebDriverWait(driver, 30).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
+        WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
         print("✅ Страница загружена!")
 
     driver.set_page_load_timeout(60)

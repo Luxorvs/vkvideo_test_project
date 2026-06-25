@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from .ui_utils import print_header, print_info, print_result, print_pause
+from .settings import Config
 
 
 @allure.epic("UI Tests")
@@ -20,79 +21,95 @@ class TestSearchFilters:
         """Тест: поиск 'костер' с применением фильтров."""
         print_header("Поиск с фильтрами")
 
+        # Используем таймауты из конфига
+        element_timeout = Config.Timeouts.EXPLICIT_WAIT
+
         # Шаг 1: Поиск
         with allure.step("Поиск по запросу 'костер'"):
-            search_input = WebDriverWait(browser, 10).until(
+            search_input = WebDriverWait(browser, element_timeout).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='search']"))
             )
             search_input.clear()
             search_input.send_keys("костер")
             search_input.send_keys("\ue007")
-            time.sleep(3)
-
-        # Шаг 2: Открыть фильтры
-        with allure.step("Открытие панели фильтров"):
-            filter_button = WebDriverWait(browser, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//span[text()='Все фильтры']/.."))
+            WebDriverWait(browser, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
             )
-            filter_button.click()
-            print("   ✅ Фильтры открыты")
-            time.sleep(2)
 
-        # Шаг 3: Применение фильтров
-        with allure.step("Выбор фильтра: Сортировка → По длительности"):
-            time.sleep(1)
-            filter_elements = browser.find_elements(By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label")
-            filter_el = [el for el in filter_elements if "Сортировка" in el.text][0]
-            filter_el.click()
-            print("         ✓ Фильтр 'Сортировка' нажат")
-            time.sleep(1)
-            option = WebDriverWait(browser, 5).until(
-                EC.element_to_be_clickable((By.XPATH, "//span[text()='По длительности']"))
-            )
-            option.click()
-            print("         ✓ Выбрано: По длительности")
-            time.sleep(1)
-
+        # Шаг 2: Тип контента → Видео
         with allure.step("Выбор фильтра: Тип контента → Видео"):
-            time.sleep(1)
-            filter_elements = browser.find_elements(By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label")
-            filter_el = [el for el in filter_elements if "Тип контента" in el.text][0]
+            filter_elements = WebDriverWait(browser, element_timeout).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label"))
+            )
+            filter_el = [el for el in filter_elements if "Тип контента" in el.text or "Content type" in el.text][0]
             filter_el.click()
             print("         ✓ Фильтр 'Тип контента' нажат")
-            time.sleep(1)
+
             option = WebDriverWait(browser, 5).until(
-                EC.element_to_be_clickable((By.XPATH, "//span[text()='Видео']"))
+                EC.element_to_be_clickable((By.XPATH, "//span[text()='Видео' or text()='Videos']"))
             )
             option.click()
-            print("         ✓ Выбрано: Видео")
-            time.sleep(1)
+            print("         ✓ Выбрано: Видео (Videos)")
 
+            # Пауза между нажатиями
+            print("\n   ⏳ Пауза 1.5 секунды между нажатиями...")
+            time.sleep(1.5)
+
+        # Шаг 3: Длительность → Короткие
         with allure.step("Выбор фильтра: Длительность → Короткие"):
-            time.sleep(1)
-            filter_elements = browser.find_elements(By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label")
-            filter_el = [el for el in filter_elements if "Длительность" in el.text][0]
+            filter_elements = WebDriverWait(browser, element_timeout).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label"))
+            )
+            filter_el = [el for el in filter_elements if "Длительность" in el.text or "Duration" in el.text][0]
             filter_el.click()
             print("         ✓ Фильтр 'Длительность' нажат")
-            time.sleep(1)
+
             option = WebDriverWait(browser, 5).until(
-                EC.element_to_be_clickable((By.XPATH, "//span[text()='Короткие']"))
+                EC.element_to_be_clickable((By.XPATH, "//span[text()='Короткие' or text()='Short']"))
             )
             option.click()
-            print("         ✓ Выбрано: Короткие")
-            time.sleep(1)
+            print("         ✓ Выбрано: Короткие (Short)")
 
+            # Пауза между нажатиями
+            print("\n   ⏳ Пауза 1.5 секунды между нажатиями...")
+            time.sleep(1.5)
+
+        # Шаг 4: Сортировка → По дате
+        with allure.step("Выбор фильтра: Сортировка → По дате"):
+            filter_elements = WebDriverWait(browser, element_timeout).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label"))
+            )
+            filter_el = [el for el in filter_elements if "Сортировка" in el.text or "Sort by" in el.text][0]
+            filter_el.click()
+            print("         ✓ Фильтр 'Сортировка' нажат")
+
+            option = WebDriverWait(browser, 5).until(
+                EC.element_to_be_clickable((By.XPATH, "//span[text()='По дате' or text()='Date']"))
+            )
+            option.click()
+            print("         ✓ Выбрано: По дате (Date)")
+
+            # Пауза между нажатиями
+            print("\n   ⏳ Пауза 1.5 секунды между нажатиями...")
+            time.sleep(1.5)
+
+        # Шаг 5: Высокое качество
         with allure.step("Включение фильтра: Высокое качество"):
-            filter_elements = browser.find_elements(By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label")
-            quality_el = [el for el in filter_elements if "Высокое качество" in el.text][0]
+            filter_elements = WebDriverWait(browser, element_timeout).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "span.vkuiSubnavigationButton__label"))
+            )
+            quality_el = [el for el in filter_elements if "Высокое качество" in el.text or "High quality" in el.text][0]
             quality_el.click()
-            print("         ✓ Фильтр 'Высокое качество' включен")
-            time.sleep(3)
+            print("         ✓ Фильтр 'Высокое качество' включен (High quality)")
 
-        # Шаг 4: Результаты поиска
-        with allure.step("Результаты поиска (первые 5 видео)"):
+            # Пауза после последнего нажатия
             time.sleep(2)
-            videos = browser.find_elements(By.CSS_SELECTOR, "a.vkitVideoCardInfoLayout__titleLink--44M2B")[:5]
+
+        # Шаг 6: Результаты поиска
+        with allure.step("Результаты поиска (первые 5 видео)"):
+            videos = WebDriverWait(browser, element_timeout).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.vkitVideoCardInfoLayout__titleLink--44M2B"))
+            )[:5]
 
             videos_info = []
             for i, video in enumerate(videos, 1):

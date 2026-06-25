@@ -26,6 +26,7 @@ class Config:
         PAGE_LOAD = int(os.getenv("PAGE_LOAD", "30"))
         VIDEO_LOAD = int(os.getenv("VIDEO_LOAD", "45"))
         VIDEO_PLAY = int(os.getenv("VIDEO_PLAY", "20"))
+        FILTER_APPLY_WAIT = int(os.getenv("FILTER_APPLY_WAIT", "10"))
 
     # Тестовые данные
     TEST_SEARCH_QUERIES: List[str] = [

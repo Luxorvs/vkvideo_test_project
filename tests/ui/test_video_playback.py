@@ -24,9 +24,7 @@ class TestVideoPlayback:
         # Шаг 1: Поиск видео
         with allure.step("Поиск видео по запросу 'котики'"):
             main_page.search_for("котики")
-            WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']"))
-            )
+            WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/video']")))
             print("   ✅ Результаты поиска загружены")
 
         # Шаг 2: Получение первого видео
@@ -38,9 +36,7 @@ class TestVideoPlayback:
         # Шаг 3: Открытие видео
         with allure.step("Открытие видео"):
             browser.get(video_info['url'])
-            WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "div[class*='VideoPlayer']"))
-            )
+            WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[class*='VideoPlayer']")))
             print_pause(5, "ЗАГРУЗКА СТРАНИЦЫ")
 
         # Шаг 4: Управление с клавиатуры
