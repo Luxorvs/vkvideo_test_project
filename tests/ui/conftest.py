@@ -10,8 +10,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.main_page import MainPage
 
-warnings.filterwarnings("ignore", category=UserWarning, module="selenium.webdriver.remote.remote_connection")
-
 
 @pytest.fixture(scope="function")
 def browser():
