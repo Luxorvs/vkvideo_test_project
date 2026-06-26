@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 @allure.epic("API Tests")
 @allure.feature("POST requests")
-@allure.story("Auto Section")
-@allure.title('Get videos from "Auto" section')
-@allure.tag("API", "POST", "auto")
+@allure.story("Food Section")
+@allure.title('Get videos from "Food" section')
+@allure.tag("API", "POST", "Food")
 @allure.severity('critical')
 @allure.label("owner", "Dmitriy")
 def test_get_cars_section_videos(api_request):
