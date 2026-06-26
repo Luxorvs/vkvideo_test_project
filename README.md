@@ -145,7 +145,7 @@ ACCESS_TOKEN = "Ваш TOKEN"
 <!-- Jira -->
 
 ### <img width="3%" title="Jira" src="images/jira.png"> Интеграция с Jira
-
+### [Задача в jenkins](https://jira.autotests.cloud/browse/HOMEWORK-1619)
 ![This is an image](images/jira_okko.jpg)
 
 ----
