@@ -125,7 +125,7 @@ ACCESS_TOKEN = "Ваш TOKEN"
 ### <img width="3%" title="Jenkins" src="images/jenkins.png"> Запуск проекта в Jenkins
 
 ### [Задача в jenkins](https://jenkins.autotests.cloud/job/vkvideo_test_project/)
-![This is an image](images/jenkins_graph.png)
+![This is an image](images/jenkinsres.png)
 ![This is an image](images/allure_rep_jen.png)
 
 ----
@@ -136,7 +136,7 @@ ACCESS_TOKEN = "Ваш TOKEN"
 ### [Dashboard](https://allure.autotests.cloud/project/5255/dashboards)
 
 ![This is an image](images/testops_dash.png)
-![This is an image](images/jora_res.png)
+![This is an image](images/jira_job.png)
 
 
 ----
