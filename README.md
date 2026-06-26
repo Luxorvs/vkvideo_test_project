@@ -115,44 +115,40 @@ ACCESS_TOKEN = "Ваш TOKEN"
 ----
 <!-- Allure report -->
 # <img width="3%" title="Allure Report" src="images/allure_report.png"> Allure report
-
-### [Задача в jenkins](https://jenkins.autotests.cloud/job/vkvideo_test_project/)
-![This is an image](images/allure_rep.png)
-
-
-##### Результаты выполнения тестова можно посмотреть в Allure-отчете
+##### Результаты выполнения тестова можно посмотреть в Allure-отчетe
 ![This is an image](images/allure_rep.png)
 ![This is an image](images/allure_gra.png)
 ![This is an image](images/allure_int.png)
-
 ----
 <!-- Jenkins -->
 
 ### <img width="3%" title="Jenkins" src="images/jenkins.png"> Запуск проекта в Jenkins
 
 ### [Задача в jenkins](https://jenkins.autotests.cloud/job/Okko-reqres-project/)
+![This is an image](images/jenkins_graph.png)
+![This is an image](images/allure_rep_jen.png)
 
 ----
 <!-- Allure TestOps -->
 
 ### <img width="3%" title="Allure TestOps" src="images/allure_testops.png"> Интеграция с Allure TestOps
 
-### [Dashboard](https://allure.autotests.cloud/project/4221/dashboards)
+### [Dashboard](https://allure.autotests.cloud/project/5255/dashboards)
 
-![This is an image](images/allure_testops_dash.jpg)
+![This is an image](images/testops_dash.png)
+![This is an image](images/jora_res.png)
+
 
 ----
 <!-- Jira -->
 
 ### <img width="3%" title="Jira" src="images/jira.png"> Интеграция с Jira
-### [Задача в jenkins](https://jira.autotests.cloud/browse/HOMEWORK-1619)
-![This is an image](images/jira_okko.jpg)
+### [Задача 1619](https://jira.autotests.cloud/browse/HOMEWORK-1619)
+
+![This is an image](images/jira_home1619.png)
+
+### [Задача 1620](https://jira.autotests.cloud/browse/HOMEWORK-1620)
+
+![This is an image](images/jira_home1620.png)
 
 ----
-<!-- Telegram -->
-
-### <img width="3%" title="Telegram" src="images/tg.png"> Оповещения в Telegram
-##### После выполнения тестов, в Telegram bot приходит сообщение с графиком и информацией о тестовом прогоне.
-
-![This is an image](images/bot_mobile_result.png)
-![This is an image](images/bot_api_result.png)
